@@ -1,0 +1,16 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "6624$YoYo",
+    "database": "Ecommerce-OMS",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "6624$YoYo",
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
