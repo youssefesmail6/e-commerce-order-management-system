@@ -17,3 +17,7 @@ node_modules/
 # Configuration files
 config.ts
 
+# Docker files
+docker-compose.override.yml
+Dockerfile.dev
+
