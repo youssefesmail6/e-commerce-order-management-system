@@ -1,0 +1,19 @@
+# Node modules
+node_modules/
+
+# Build files
+/dist
+/build
+
+# Environment variable files
+.env
+
+# TypeScript files
+*.tsbuildinfo
+
+# Logs
+*.log
+
+# Configuration files
+config.ts
+
