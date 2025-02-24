@@ -1,10 +1,11 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application, Request, Response, NextFunction } from "express";
 import env, { envSchema } from "./config/env.config";
 import { Logger } from "./services/logger.service";
 import Container from "typedi";
 import cors from "cors";
-import bodyParser from "body-parser";
+import getRouters from "./routes/index.routes";
 import { connectDB } from "./config/db.config";
+import ErrorHandlerMiddleware from "./middlewares/error-handler.middleware";
 
 class App {
   private app!: Application;
@@ -16,22 +17,16 @@ class App {
   };
 
   private constructor() {}
+
   public static async init(): Promise<App> {
     const appInstance = new App();
     appInstance.validateEnv();
     appInstance.app = express();
     appInstance.initializeMiddlewares();
     await connectDB();
-    appInstance.initializeRoutes();
+    await appInstance.initializeRoutes();
     appInstance.errorHandler();
     return appInstance;
-  }
-
-  private errorHandler() {
-    this.app.use((err: any, req: Request, res: Response, next: Function) => {
-      this.logger.error(err.message);
-      res.status(500).send("Something went wrong!");
-    });
   }
 
   private validateEnv() {
@@ -43,13 +38,24 @@ class App {
 
   private initializeMiddlewares() {
     this.app.use(cors(this.corsOptions));
-    this.app.use(bodyParser.json());
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
+
+    // Test route to check JSON response
+    this.app.get("/", (req: Request, res: Response) => {
+      res.json({ message: "Hello World!" });
+    });
   }
 
-  private initializeRoutes() {
-    this.app.get("/", (req: Request, res: Response) => {
-      res.send("Hello World!");
-    });
+  private async initializeRoutes() {
+    const routers = await getRouters();
+    for (const router of routers) {
+      this.app.use("/api", router);
+    }
+  }
+
+  private errorHandler() {
+    this.app.use(ErrorHandlerMiddleware);
   }
 
   public listen() {
