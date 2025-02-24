@@ -46,3 +46,7 @@ Thumbs.db
 .npm/
 node_repl_history
 
+# Docker files
+docker-compose.override.yml
+Dockerfile.dev
+
