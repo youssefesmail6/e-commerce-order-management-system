@@ -1,6 +1,7 @@
 import express, { Application, Request, Response, NextFunction } from "express";
 import env, { envSchema } from "./config/env.config";
 import { Logger } from "./services/logger.service";
+import { RedisService } from './services/redis.service';
 import Container from "typedi";
 import cors from "cors";
 import getRouters from "./routes/index.routes";
@@ -26,6 +27,7 @@ class App {
     await connectDB();
     await appInstance.initializeRoutes();
     appInstance.errorHandler();
+    RedisService.getClient();
     return appInstance;
   }
 

@@ -26,8 +26,11 @@ const env = {
   },
   REDIS: {
     URL: process.env.REDIS_URL,
-  },
-};
+      HOST: process.env.REDIS_HOST || 'localhost',
+      PORT: Number(process.env.REDIS_PORT) || 6379,
+      PASSWORD: process.env.REDIS_PASSWORD || '',
+    },
+  }
 
 export const envSchema = Joi.object({
   APP: Joi.object({
@@ -53,6 +56,9 @@ export const envSchema = Joi.object({
   }),
   REDIS: Joi.object({
     URL: Joi.string().required(),
+    HOST: Joi.string().required(),
+    PORT: Joi.number().port().required(),
+    PASSWORD: Joi.string().required(),
   }),
 });
 
