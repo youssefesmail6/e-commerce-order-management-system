@@ -1,6 +1,6 @@
 import { Router } from "express";
 import ValidationMiddleware from "../middlewares/validation.middleware";
-import AddUserDto from "../dtos/AddUser.dto";
+import AddUserDto from "../dtos/addUser.dto";
 import asyncHandler from "../middlewares/async-handler";
 import UserController from "../controllers/user.controllers";
 import { createAccountLimiter } from "../middlewares/rateLimit.middleware";

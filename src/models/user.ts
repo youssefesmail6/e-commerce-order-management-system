@@ -1,10 +1,5 @@
 import bcrypt from "bcryptjs";
-import {
-  Column,
-  DataType,
-  Model,
-  Table,
-} from "sequelize-typescript";
+import { Column, DataType, Model, Table, BeforeCreate } from "sequelize-typescript";
 
 export enum RoleNames {
   ADMIN = "ADMIN",
@@ -71,14 +66,16 @@ class User extends Model {
   isAdmin!: boolean;
 
   @Column({
-    type: DataType.ENUM(
-      RoleNames.ADMIN,
-      RoleNames.CUSTOMER
-    ),
+    type: DataType.ENUM(RoleNames.ADMIN, RoleNames.CUSTOMER),
     allowNull: true,
   })
   role?: RoleNames;
-
+  @BeforeCreate
+  static assignAdminRole(user: User) {
+    if (user.isAdmin) {
+      user.role = RoleNames.ADMIN;
+    }
+  }
   @Column({
     type: DataType.DATE,
     allowNull: false,

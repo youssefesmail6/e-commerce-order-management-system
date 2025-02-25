@@ -4,7 +4,7 @@ import User, { RoleNames, UserCreationAttributes } from "../models/user";
 import { AdminCreationAttributes } from "../models/user";
 import bcrypt from "bcryptjs";
 import BadRequestException from "../exceptions/bad-request.exception";
-import AddUserDto from "../dtos/AddUser.dto";
+
 
 class UserService {
   private logger: Logger = Container.get(Logger);
