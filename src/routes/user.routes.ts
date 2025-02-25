@@ -3,6 +3,7 @@ import ValidationMiddleware from "../middlewares/validation.middleware";
 import AddUserDto from "../dtos/AddUser.dto";
 import asyncHandler from "../middlewares/async-handler";
 import UserController from "../controllers/user.controllers";
+import { createAccountLimiter } from "../middlewares/rateLimit.middleware";
 
 export default async () => {
   const userController = await UserController.init();
@@ -10,6 +11,7 @@ export default async () => {
 
   router.post(
     "/v1/user/create-user",
+    createAccountLimiter,
     ValidationMiddleware(AddUserDto),
     asyncHandler(userController.createUser),
   );
