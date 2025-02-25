@@ -2,9 +2,14 @@ import rateLimit from "express-rate-limit";
 
 export const createAccountLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // Limit each IP to 5 requests per windowMs
+  max: 15, // Limit each IP to 5 requests per windowMs
   message: "Too many accounts created from this IP, please try again later.",
   headers: true,
+});
+export const adminRateLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 100, // Allow 100 requests per window per admin
+  message: "Too many requests from this admin, please try again later.",
 });
 
 export const loginLimiter = rateLimit({

@@ -6,6 +6,7 @@ import Container from "typedi";
 import UserService from "./user.service";
 import { JwtDto } from "../dtos/jwt.dto";
 import NotFoundException from "../exceptions/not-found.exception";
+import { RoleNames } from "../models/user";
 
 class AuthService {
   private userService: UserService;
@@ -53,6 +54,7 @@ class AuthService {
         userId: user.id,
         email: user.email,
         isAdmin: user.isAdmin,
+        role: user.role as RoleNames,
       });
 
       return { accessToken };

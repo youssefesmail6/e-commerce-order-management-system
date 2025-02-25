@@ -22,7 +22,7 @@ module.exports = {
         allowNull: false,
       },
       category: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM("Electronics", "Fashion", "Home Appliances", "Beauty", "Sports"),
         allowNull: false,
       },
       stock: {

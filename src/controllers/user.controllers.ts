@@ -2,8 +2,8 @@ import Container from "typedi";
 import { Logger } from "../services/logger.service";
 import { NextFunction, Request, Response } from "express";
 import UserService from "../services/user.service";
-import AddUserDto from "../dtos/AddUser.dto";
-import User, { RoleNames, UserCreationAttributes } from "../models/user";
+import AddUserDto from "../dtos/addUser.dto";
+import  { RoleNames, UserCreationAttributes } from "../models/user";
 
 class UserController {
   private logger: Logger = Container.get(Logger);

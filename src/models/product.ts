@@ -1,12 +1,18 @@
 import { Column, DataType, Model, Table } from "sequelize-typescript";
 
-
+export enum ProductCategory {
+  ELECTRONICS = "Electronics",
+  FASHION = "Fashion",
+  HOME_APPLIANCES = "Home Appliances",
+  BEAUTY = "Beauty",
+  SPORTS = "Sports",
+}
 
 export interface ProductCreationAttributes {
   name: string;
   description: string;
   price: number;
-  category: string;
+  category: ProductCategory;
   stock: number;
 }
 
@@ -14,7 +20,7 @@ export interface ProductCreationAttributes {
   tableName: "products",
   modelName: "Product",
 })
-class Product extends Model<Product> {
+class Product extends Model<Product, ProductCreationAttributes> {
   @Column({
     primaryKey: true,
     type: DataType.UUID,
@@ -41,10 +47,10 @@ class Product extends Model<Product> {
   price!: number;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.ENUM(...Object.values(ProductCategory)),
     allowNull: false,
  })  
-  category!: string;
+  category!: ProductCategory;
 
   @Column({
     type: DataType.INTEGER,

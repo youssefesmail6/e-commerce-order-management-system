@@ -4,7 +4,7 @@ import { Logger } from "./services/logger.service";
 import { exit } from "process";
 import UserService from "./services/user.service";
 import env from "./config/env.config";
-import { AdminCreationAttributes } from "./models/user";
+import { AdminCreationAttributes, RoleNames } from "./models/user";
 
 const logger = Container.get(Logger);
 
