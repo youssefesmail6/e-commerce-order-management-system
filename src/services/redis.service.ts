@@ -5,7 +5,7 @@ import { Logger } from "./logger.service";
 const logger = new Logger();
 
 export class RedisService {
-  private static client: Redis | null = null; // Ensure correct typing
+  private static client: Redis | null = null;
 
   // Get Redis client (Singleton)
   public static getClient(): Redis {

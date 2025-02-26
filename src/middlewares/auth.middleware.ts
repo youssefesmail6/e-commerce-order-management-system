@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 import { JwtDto } from "../dtos/jwt.dto";
 import { RoleNames } from "../models/user";
 
-interface AuthRequest extends Request {
+export interface AuthRequest extends Request {
   jwt?: JwtDto;
 }
 
