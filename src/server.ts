@@ -4,15 +4,16 @@ import { Logger } from "./services/logger.service";
 import { exit } from "process";
 import UserService from "./services/user.service";
 import env from "./config/env.config";
-import { AdminCreationAttributes, RoleNames } from "./models/user";
+import { AdminCreationAttributes } from "./models/user";
+import WebSocketService from "./services/websocket.service";
+import { createServer } from "http";
 
 const logger = Container.get(Logger);
 
 const createAdminUserIfNotExists = async () => {
   const userService = await UserService.init();
   const userCounter = await userService.countUsers();
-  
-  // Check if any user exists. If none exists, create the admin.
+
   if (userCounter === 0) {
     const newUser: AdminCreationAttributes = {
       email: env.ADMIN.EMAIL as string,
@@ -28,15 +29,24 @@ const createAdminUserIfNotExists = async () => {
   }
 };
 
-
 const startApplication = async () => {
   try {
     const app = await App.init();
-   await createAdminUserIfNotExists();
-    app.listen();
+    await createAdminUserIfNotExists();
+
+    const server = createServer(app.getExpressInstance());
+
+    const websocketService = Container.get(WebSocketService);
+    websocketService.initialize(server);
+
+    server.listen(env.APP.PORT, () => {
+      logger.info(`🚀 Server is running at http://localhost:${env.APP.PORT}`);
+    });
+
   } catch (err: any) {
-    logger.error(err.message);
+    logger.error(`Error starting application: ${err.message}`);
     exit(1);
   }
 };
+
 startApplication();

@@ -102,6 +102,38 @@ class OrderService {
         ],
     });
 }
+//get order by id
+async getOrderById(userId: string, orderId: string) {
+  try {
+    const order = await Order.findByPk(orderId, {
+      include: [
+        {
+          model: OrderItem,
+          include: [{ model: Product, attributes: ["name"] }],
+        },
+      ],
+    });
+    if (!order || order.userId !== userId) {
+      throw new NotFoundException("Order not found.");
+    }
+
+    return order;
+  } catch (error: any) {
+    this.logger.error(`OrderService.getOrderById: ${error.message}`);
+    throw error;
+  }
+}
+public async updateOrderStatus(orderId: string, status: OrderStatus) {
+  const order = await Order.findByPk(orderId);
+  
+  if (!order) {
+    throw new NotFoundException("Order not found or does not belong to the user.");
+  }
+
+  order.status = status;
+  await order.save();
+  return order;
+}
 }
 
 export default OrderService;
