@@ -1,0 +1,107 @@
+import Order, { OrderStatus } from "../models/order";
+import OrderItem from "../models/orderItems";
+import Product from "../models/product";
+import { RedisService } from "./redis.service";
+import Container from "typedi";
+import { Logger } from "../services/logger.service";
+import NotFoundException from "../exceptions/not-found.exception";
+import BadRequestException from "../exceptions/bad-request.exception";
+import CreateOrderDto from "../dtos/createOrder.dto";
+import DBConnector from "../models";
+class OrderService {
+  private logger: Logger = Container.get(Logger);
+  private redisClient = RedisService.getClient();
+  private constructor() {}
+
+  public static async init(): Promise<OrderService> {
+    return new OrderService();
+  }
+
+  async createOrder(userId: string, createOrderDto: CreateOrderDto) {
+    const db = await DBConnector.getInstance();
+    const transaction = await db.getTransaction();
+
+    try {
+      const { items } = createOrderDto;
+
+      // Fetch product details by name
+      const productNames = items.map((item) => item.name);
+      const products = await Product.findAll({
+        where: { name: productNames },
+        transaction,
+        lock: true,
+      });
+
+      if (products.length !== items.length) {
+        throw new NotFoundException("One or more products not found.");
+      }
+
+      let totalPrice = 0;
+      const orderItemsData = items.map((item) => {
+        const product = products.find((p) => p.name === item.name);
+        if (!product)
+          throw new NotFoundException(`Product '${item.name}' not found.`);
+
+        if (product.stock < item.quantity) {
+          throw new BadRequestException(
+            `Insufficient stock for '${item.name}'.`,
+          );
+        }
+
+        product.stock -= item.quantity;
+        totalPrice += product.price * item.quantity;
+
+        return {
+          productId: product.id,
+          quantity: item.quantity,
+          price: product.price,
+        };
+      });
+
+      const order = await Order.create(
+        {
+          userId,
+          totalPrice,
+          status: OrderStatus.PENDING,
+        },
+        { transaction },
+      );
+
+      const orderItems = orderItemsData.map((item) => ({
+        ...item,
+        orderId: order.id,
+      }));
+      await OrderItem.bulkCreate(orderItems, { transaction });
+
+      await Promise.all(
+        products.map((product) => product.save({ transaction })),
+      );
+
+      await transaction.commit();
+      return order;
+    } catch (error: any) {
+      this.logger.error(`OrderService.createOrder: ${error.message}`);
+      await transaction.rollback();
+      throw error;
+    }
+  }
+
+  async getOrdersHistoryByUser(userId: string) {
+    return await Order.findAll({
+        where: { userId },
+        include: [
+            {
+                model: OrderItem,
+                include: [
+                    {
+                        model: Product,
+                        attributes: ["name"],
+                    },
+                ],
+            },
+        ],
+    });
+}
+}
+
+export default OrderService;

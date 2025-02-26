@@ -4,8 +4,10 @@ import {
   ForeignKey,
   Model,
   Table,
+  HasMany,
 } from "sequelize-typescript";
-import User from "./user"; // Adjust the path if needed
+import User from "./user";
+ import OrderItem from "./orderItems";
 
 export enum OrderStatus {
   PENDING = "pending",
@@ -58,7 +60,8 @@ class Order extends Model<Order, OrderCreationAttributes> {
     defaultValue: OrderStatus.PENDING,
   })
   status!: OrderStatus;
-
+  @HasMany(() => OrderItem)
+  orderItems!: OrderItem[];
   @Column({
     type: DataType.DATE,
     allowNull: false,

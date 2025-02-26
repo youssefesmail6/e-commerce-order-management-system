@@ -4,6 +4,7 @@ import {
     Model,
     Table,
     ForeignKey,
+    BelongsTo,
   } from 'sequelize-typescript';
   import Order from './order';
   import Product from './product';
@@ -52,7 +53,10 @@ import {
       allowNull: false,
     })
     price!: number;
-  
+    @BelongsTo(() => Order)
+    order!: Order;
+    @BelongsTo(() => Product)
+    product!: Product;
     @Column({
       type: DataType.DATE,
       allowNull: false,
