@@ -1,16 +1,18 @@
-import express, { Application, Request, Response, NextFunction } from "express";
+import express, { Application, Request, Response } from "express";
 import env, { envSchema } from "./config/env.config";
 import { Logger } from "./services/logger.service";
-import { RedisService } from './services/redis.service';
+import { RedisService } from "./services/redis.service";
 import Container from "typedi";
 import cors from "cors";
 import getRouters from "./routes/index.routes";
 import { connectDB } from "./config/db.config";
 import ErrorHandlerMiddleware from "./middlewares/error-handler.middleware";
+import { initWebSocket } from "./utils/webSocketClient"
 
 class App {
   private app!: Application;
   private logger: Logger = Container.get(Logger);
+
   public corsOptions: cors.CorsOptions = {
     origin: "*",
     allowedHeaders: "*",
@@ -47,7 +49,18 @@ class App {
     this.app.get("/", (req: Request, res: Response) => {
       res.json({ message: "Hello World!" });
     });
+    // Test route to trigger WebSocket connection
+    this.app.get("/test-websocket/:userId", (req: Request, res: Response) => {
+      const { userId } = req.params;
+
+      // Initialize WebSocket with the given userId
+      initWebSocket(userId);
+
+      res.status(200).json({ message: `WebSocket initialized for user: ${userId}` });
+    });
   }
+  
+  
 
   private async initializeRoutes() {
     const routers = await getRouters();
@@ -60,12 +73,8 @@ class App {
     this.app.use(ErrorHandlerMiddleware);
   }
 
-  public listen() {
-    this.app.listen(env.APP.PORT, () => {
-      this.logger.info(
-        `🚀 Server is running at http://localhost:${env.APP.PORT}`,
-      );
-    });
+  public getExpressInstance(): Application {
+    return this.app;
   }
 }
 
