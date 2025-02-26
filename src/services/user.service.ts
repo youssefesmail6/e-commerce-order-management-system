@@ -1,11 +1,11 @@
+import { Service } from "typedi";
 import Container from "typedi";
 import { Logger } from "./logger.service";
 import User, { RoleNames, UserCreationAttributes } from "../models/user";
 import { AdminCreationAttributes } from "../models/user";
 import bcrypt from "bcryptjs";
 import BadRequestException from "../exceptions/bad-request.exception";
-
-
+@Service()
 class UserService {
   private logger: Logger = Container.get(Logger);
 
@@ -55,6 +55,20 @@ class UserService {
       return user ? (user.toJSON() as User) : null;
     } catch (error: any) {
       this.logger.error(`UserService.getUserByEmail: ${error.message}`);
+      throw error;
+    }
+  }
+  public async getUserEmailById(userId: string): Promise<string | null> {
+    try {
+      const user = await User.findOne({ where: { id: userId } });
+      if (user) {
+        return user.email;
+      } else {
+        this.logger.error(`User with ID ${userId} not found.`);
+        return null;
+      }
+    } catch (error: any) {
+      this.logger.error(`UserService.getUserEmailById: ${error.message}`);
       throw error;
     }
   }
