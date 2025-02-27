@@ -54,3 +54,7 @@ Technologies:
 🔄 Real-time Updates   	WebSockets
 
 🐳 Containerization   	Docker
+
+
+
+API Documentation(Postman):https://documenter.getpostman.com/view/31519255/2sAYdfqB1k
