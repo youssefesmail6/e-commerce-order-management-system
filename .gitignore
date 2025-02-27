@@ -84,7 +84,9 @@ node_modules/
 
 # Configuration files
 config.ts
-
+config/config.json
+.prettierrc
+eslint.config.mjs
 # Docker files
 docker-compose.override.yml
 Dockerfile.dev
