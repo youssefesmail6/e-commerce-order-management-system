@@ -8,7 +8,7 @@ COPY . ./app
 WORKDIR /app
 
 # Install Node Package
-RUN npm install --legacy-peer-deps
+RUN npm install 
 
 # Set Env
 ENV NODE_ENV development
