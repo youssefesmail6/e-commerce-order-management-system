@@ -14,7 +14,8 @@ debug.log
 .env
 .env.local
 .env.*.local
-
+config.js
+config
 
 # PostgreSQL
 pgdata/
@@ -48,5 +49,21 @@ node_repl_history
 
 # Docker files
 docker-compose.override.yml
-Dockerfile.dev
+# compiled output
+.vscode
+node_modules
+logs
+
+# code formatter
+.eslintrc
+.eslintignore
+.editorconfig
+.huskyrc
+.lintstagedrc.json
+.prettierrc
+.env
+
+# docker
+docker-compose.yml
+
 

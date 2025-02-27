@@ -13,5 +13,4 @@ logs
 .env
 
 # docker
-Dockerfile.dev
 docker-compose.yml
