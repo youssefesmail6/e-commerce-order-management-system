@@ -13,4 +13,8 @@ logs
 .env
 
 # docker
+<<<<<<< HEAD
+=======
+Dockerfile.dev
+>>>>>>> dev
 docker-compose.yml
