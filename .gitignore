@@ -57,6 +57,7 @@ logs
 # code formatter
 .eslintrc
 .eslintignore
+eslint.config.mjs
 .editorconfig
 .huskyrc
 .lintstagedrc.json
@@ -89,5 +90,4 @@ config/config.json
 eslint.config.mjs
 # Docker files
 docker-compose.override.yml
-Dockerfile.dev
 

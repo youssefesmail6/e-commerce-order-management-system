@@ -1,0 +1,19 @@
+# NodeJS Version 16
+FROM satantime/puppeteer-node:20.9.0-buster-slim
+
+# Copy Dir
+COPY . ./app
+
+# Work to Dir
+WORKDIR /app
+
+# Install Node Package
+RUN npm install 
+
+# Set Env
+ENV NODE_ENV development
+
+EXPOSE 3000
+
+# Cmd script
+CMD ["npm", "run", "dev"]
