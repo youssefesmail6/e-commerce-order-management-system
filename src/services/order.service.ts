@@ -85,7 +85,7 @@ class OrderService {
         );
 
         await transaction.commit();
-        return { paymentIntentId: paymentIntent.id, totalPrice };
+return { ...order.toJSON(), paymentIntentId: paymentIntent.id };
     } catch (error: any) {
         this.logger.error(`OrderService.createOrder: ${error.message}`);
         await transaction.rollback();
