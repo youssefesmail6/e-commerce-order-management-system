@@ -30,6 +30,10 @@ const env = {
       PORT: Number(process.env.REDIS_PORT) || 6379,
       PASSWORD: process.env.REDIS_PASSWORD || '',
     },
+    STRIPE: {
+      SECRET_KEY: process.env.STRIPE_SECRET_KEY || "",
+    },
+    
   }
 
 export const envSchema = Joi.object({
@@ -53,6 +57,9 @@ export const envSchema = Joi.object({
   AUTH: Joi.object({
     SECRET: Joi.string().required(),
     EXPIRATION: Joi.string().required(),
+  }),
+  STRIPE: Joi.object({
+    SECRET_KEY: Joi.string().required(),
   }),
   REDIS: Joi.object({
     URL: Joi.string().required(),
